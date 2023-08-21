@@ -1,0 +1,30 @@
+public class JumpState : AirbornState
+{
+    private readonly JumpStateConfig _config;
+
+    public JumpState(IStateSwitcher stateSwitcher, Character character, StateMachineData data) : base(stateSwitcher, character, data)
+        => _config = character.Config.AirborneStateConfig.JumpingStateConfig;
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        View.StartJumping();
+        Data.YVelocity = _config.StartYVelocity;
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        View.StopJumping();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (Data.YVelocity < 0)
+            StateSwitcher.SwitchState<FallingState>();
+    }
+}
